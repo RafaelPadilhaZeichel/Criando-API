@@ -1,0 +1,5 @@
+@EndUserText.label: 'Teste'
+define service ZUI_MAT_HEADER {
+  expose ZC_MAT_HEADER;
+  expose ZC_MAT_ITEMS;
+}

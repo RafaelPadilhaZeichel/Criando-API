@@ -1,0 +1,55 @@
+managed implementation in class zbp_mat_header unique;
+strict ( 2 );
+
+define behavior for ZI_MAT_HEADER alias Material
+persistent table zmat_header
+lock master
+authorization master ( instance )
+etag master LastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete;
+
+  association _Items { create; }
+
+  field ( numbering : managed, readonly ) MatUuid;
+
+  mapping for zmat_header
+    {
+      MatUuid       = mat_uuid;
+      MaterialId    = material_id;
+      Description   = description;
+      MaterialType  = material_type;
+      CreatedBy     = created_by;
+      CreatedAt     = created_at;
+      LastChangedBy = last_changed_by;
+      LastChangedAt = last_changed_at;
+    }
+}
+
+define behavior for ZI_MAT_ITEMS alias Item
+persistent table zmat_items
+lock dependent by _Material
+authorization dependent by _Material
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  association _Material;
+
+  field ( numbering : managed, readonly ) ItemUuid;
+  field ( readonly ) MatUuid;
+
+  mapping for zmat_items
+    {
+      ItemUuid           = item_uuid;
+      MatUuid            = mat_uuid;
+      Posnr              = posnr;
+      Plant              = plant;
+      Quantity           = quantity;
+      Unit               = unit;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+}
